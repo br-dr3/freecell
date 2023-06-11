@@ -15,4 +15,8 @@ spring:
     defer-datasource-initialization: true
     show-sql: true
     hibernate:
-      ddl-auto: create-drop
+#      ddl-auto: create-drop
+      ddl-auto: update
+freecell:
+  number-of-cards: 52
+  number-of-columns: 8

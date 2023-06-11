@@ -12,4 +12,5 @@ import java.util.UUID;
 @Repository
 public interface CardsRepository extends JpaRepository<Card, UUID>, JpaSpecificationExecutor<Card> {
     List<Card> findAll(Specification<Card> spec);
+
 }

@@ -12,10 +12,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class GamesService {
     @Autowired CardsService cardsService;
+    @Autowired Distributor distributor;
     public GameDTO newGame(NewGameRequestDTO newGameRequest) {
         var cards = cardsService.getCards();
         var shuffledCards = Shuffler.shuffle(cards.getCards(), newGameRequest.getSeed());
-        var distributedCards = Distributor.distribute(shuffledCards);
+        var distributedCards = distributor.distribute(shuffledCards);
 
         return GameDTO.builder()
                 .cells(CellsDTO.builder().build())
