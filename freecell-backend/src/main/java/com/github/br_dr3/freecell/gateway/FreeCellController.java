@@ -20,7 +20,7 @@ public class FreeCellController {
 
     @GetMapping("/cards")
     public ResponseEntity<DataWrapper<CardsDTO>> getCards() {
-        var cards = cardsService.getCards();
+        var cards = cardsService.getCardsDTO();
         return ResponseEntity.ok().body(DataWrapper.<CardsDTO> builder().data(cards).build());
     }
 

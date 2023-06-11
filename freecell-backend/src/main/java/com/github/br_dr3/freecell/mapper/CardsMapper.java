@@ -1,8 +1,10 @@
 package com.github.br_dr3.freecell.mapper;
 
-import com.github.br_dr3.freecell.entities.Card;
 import com.github.br_dr3.freecell.gateway.dto.CardDTO;
 import com.github.br_dr3.freecell.gateway.dto.CardsDTO;
+import com.github.br_dr3.freecell.repositories.entities.Card;
+import com.github.br_dr3.freecell.repositories.entities.enumeration.CardLabel;
+import com.github.br_dr3.freecell.repositories.entities.enumeration.CardSuit;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -20,6 +22,7 @@ public class CardsMapper {
     }
     public CardDTO toCardDTO(Card card) {
         return CardDTO.builder()
+                .id(card.getId())
                 .label(card.getCardLabel().getLabel())
                 .type(card.getCardSuit().name())
                 .color(card.getCardSuit().getColor().name())

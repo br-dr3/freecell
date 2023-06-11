@@ -9,7 +9,7 @@ import java.util.Random;
 
 public class Shuffler {
 
-    public static List<CardDTO> shuffle(List<CardDTO> cards, Integer seed) {
+    public static List<CardDTO> shuffle(List<CardDTO> cards, Long seed) {
         var copy = new ArrayList<>(cards.stream().toList());
 
         var random = new Random(seed);

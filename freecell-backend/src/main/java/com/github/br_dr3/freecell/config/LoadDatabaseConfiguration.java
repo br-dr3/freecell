@@ -1,8 +1,8 @@
 package com.github.br_dr3.freecell.config;
 
-import com.github.br_dr3.freecell.entities.Card;
-import com.github.br_dr3.freecell.entities.enumeration.CardLabel;
-import com.github.br_dr3.freecell.entities.enumeration.CardSuit;
+import com.github.br_dr3.freecell.repositories.entities.Card;
+import com.github.br_dr3.freecell.repositories.entities.enumeration.CardLabel;
+import com.github.br_dr3.freecell.repositories.entities.enumeration.CardSuit;
 import com.github.br_dr3.freecell.repositories.CardsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;

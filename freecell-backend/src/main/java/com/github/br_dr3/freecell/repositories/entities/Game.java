@@ -1,11 +1,19 @@
-package com.github.br_dr3.freecell.entities;
+package com.github.br_dr3.freecell.repositories.entities;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.UUID;
 
 @Entity
 @Table(name = "games")
+@Data
+@Builder
+@AllArgsConstructor
+@EqualsAndHashCode
 public class Game {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)

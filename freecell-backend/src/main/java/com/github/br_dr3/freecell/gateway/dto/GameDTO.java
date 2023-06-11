@@ -16,9 +16,12 @@ public class GameDTO {
     @JsonProperty("cells")
     private CellsDTO cells;
 
+    @JsonProperty("id")
+    private Long seed;
+
     @JsonProperty("moves")
-    private Integer moves;
+    private Long moves;
 
     @JsonProperty("score")
-    private Integer score;
+    private Long score;
 }

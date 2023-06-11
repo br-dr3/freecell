@@ -12,5 +12,5 @@ public class NewGameRequestDTO {
     @JsonProperty("id")
     @Min(1)
     @Max(30000)
-    private Integer seed;
+    private Long seed;
 }

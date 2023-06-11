@@ -1,4 +1,4 @@
-package com.github.br_dr3.freecell.entities.enumeration;
+package com.github.br_dr3.freecell.repositories.entities.enumeration;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
