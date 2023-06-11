@@ -7,11 +7,8 @@ import lombok.Data;
 @Data
 @Builder
 public class CardDTO {
-    @JsonProperty("id")
-    private String id;
-
-    @JsonProperty("number")
-    private String number;
+    @JsonProperty("label")
+    private String label;
 
     @JsonProperty("type")
     private String type;

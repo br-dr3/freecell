@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public enum CardType {
+public enum CardSuit {
     CLUBS(Color.BLACK),
     HEARTS(Color.RED),
     SPADES(Color.BLACK),

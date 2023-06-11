@@ -20,10 +20,9 @@ public class CardsMapper {
     }
     public CardDTO toCardDTO(Card card) {
         return CardDTO.builder()
-                .id(card.getId().toString())
-                .number(card.getCardNumber().getLabel())
-                .type(card.getCardType().name())
-                .color(card.getCardType().getColor().name())
+                .label(card.getCardLabel().getLabel())
+                .type(card.getCardSuit().name())
+                .color(card.getCardSuit().getColor().name())
                 .build();
     }
 }

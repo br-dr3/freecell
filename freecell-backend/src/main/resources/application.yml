@@ -1,3 +1,7 @@
+springdoc:
+  swagger-ui:
+    path: /swagger
+
 spring:
   sql:
     init:
@@ -8,6 +12,7 @@ spring:
     password: password
     driverClassName: com.mysql.cj.jdbc.Driver
   jpa:
+    defer-datasource-initialization: true
     show-sql: true
     hibernate:
       ddl-auto: create-drop

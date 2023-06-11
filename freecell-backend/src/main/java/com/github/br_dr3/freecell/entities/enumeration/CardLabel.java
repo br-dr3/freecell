@@ -5,8 +5,8 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public enum CardNumber {
-    ONE("1"), 
+public enum CardLabel {
+    ACE("A"),
     TWO("2"), 
     THREE("3"), 
     FOUR("4"), 

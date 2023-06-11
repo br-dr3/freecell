@@ -10,8 +10,8 @@ import java.util.UUID;
 @Data
 public class InitialGame {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    private Long id;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "card_id", referencedColumnName = "id")

@@ -8,8 +8,8 @@ import java.util.UUID;
 @Table(name = "games")
 public class Game {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    private Long id;
 
     @Column(name = "seed", unique = true)
     private Long seed;
