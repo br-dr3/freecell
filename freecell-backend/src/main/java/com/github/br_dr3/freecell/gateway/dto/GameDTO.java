@@ -7,6 +7,9 @@ import lombok.Data;
 @Data
 @Builder
 public class GameDTO {
+    @JsonProperty("id")
+    private Long id;
+
     @JsonProperty("matrix")
     private MatrixDTO matrix;
 
@@ -16,8 +19,11 @@ public class GameDTO {
     @JsonProperty("cells")
     private CellsDTO cells;
 
-    @JsonProperty("id")
+    @JsonProperty("seed")
     private Long seed;
+
+    @JsonProperty("user_id")
+    private Long userId;
 
     @JsonProperty("moves")
     private Long moves;

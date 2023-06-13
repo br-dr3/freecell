@@ -1,90 +1,52 @@
 package com.github.br_dr3.freecell.service;
 
 import com.github.br_dr3.freecell.distributor.Distributor;
+import com.github.br_dr3.freecell.exceptions.UserNotFoundException;
 import com.github.br_dr3.freecell.gateway.dto.*;
 import com.github.br_dr3.freecell.mapper.CardsMapper;
 import com.github.br_dr3.freecell.repositories.GamesRepository;
-import com.github.br_dr3.freecell.repositories.InitialGamesRepository;
+import com.github.br_dr3.freecell.repositories.UserRepository;
 import com.github.br_dr3.freecell.repositories.entities.Game;
-import com.github.br_dr3.freecell.repositories.entities.InitialGame;
 import com.github.br_dr3.freecell.shuffler.Shuffler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 @Service
 public class GamesService {
     @Autowired CardsService cardsService;
     @Autowired Distributor distributor;
     @Autowired GamesRepository gamesRepository;
-    @Autowired InitialGamesRepository initialGamesRepository;
     @Autowired CardsMapper cardsMapper;
+    @Autowired UserRepository userRepository;
+
     public GameDTO newGame(NewGameRequestDTO newGameRequest) {
         var cards = cardsService.getCardsDTO();
-        var gameDTO = GameDTO.builder()
-                .seed(newGameRequest.getSeed())
+        var game = saveGame(newGameRequest);
+        return GameDTO.builder()
+                .id(game.getId())
+                .seed(game.getSeed())
+                .userId(game.getUser().getId())
                 .cells(CellsDTO.builder().build())
                 .foundation(FoundationDTO.builder().build())
                 .matrix(getMatrixDTO(newGameRequest, cards))
                 .moves(0L)
-                .score(0L)
+                .score(game.getScore())
                 .build();
+    }
 
+    private Game saveGame(NewGameRequestDTO gameRequest) {
+        var userId = gameRequest.getUserId();
+        var user = userRepository.findById(userId);
 
-        if(exists(gameDTO)) {
-            updateGame(gameDTO, 0L);
-        } else {
-            var gameEntity = saveGame(gameDTO);
-            saveInitialGame(gameEntity, gameDTO);
+        if(user.isEmpty()) {
+            throw new UserNotFoundException("User with id '"+ userId +"' not found.");
         }
 
-        return gameDTO;
-    }
-
-    private Game updateGame(GameDTO gameDTO, long score) {
-        var game = gamesRepository.findBySeed(gameDTO.getSeed());
-        game.setScore(score);
-        return gamesRepository.save(game);
-    }
-
-    private Game saveGame(GameDTO gameDTO) {
         return gamesRepository.save(Game.builder()
-                .seed(gameDTO.getSeed())
-                .score(gameDTO.getScore())
+                .user(user.get())
+                .seed(gameRequest.getSeed())
+                .score(0L)
                 .build());
-    }
-
-    private boolean exists(GameDTO gameDTO) {
-        return gamesRepository.existsBySeed(gameDTO.getSeed());
-    }
-
-    private List<InitialGame> saveInitialGame(Game gameEntity, GameDTO gameDTO) {
-        var columns = gameDTO.getMatrix().getColumns();
-
-        var initialGames = columns.stream()
-                .flatMap(column -> column.getCards()
-                        .stream()
-                        .flatMap(card -> Stream.of(Map.entry(column, card))))
-                .map(e -> {
-                    try {
-                        return InitialGame.builder()
-                                .game(gameEntity)
-                                .card(cardsService.getCard(e.getValue().getId()))
-                                .y(Integer.toUnsignedLong(columns.indexOf(e.getKey())))
-                                .x(Integer.toUnsignedLong(e.getKey().getCards().indexOf(e.getValue())))
-                                .build();
-                    } catch (Exception ex) {
-                        throw new RuntimeException(ex);
-                    }
-                })
-                .toList();
-
-        return StreamSupport.stream(initialGamesRepository.saveAll(initialGames).spliterator(), false)
-                .toList();
     }
 
     private MatrixDTO getMatrixDTO(NewGameRequestDTO newGameRequest, CardsDTO cards) {

@@ -6,7 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.util.UUID;
+import java.util.List;
 
 @Entity
 @Table(name = "games")
@@ -19,9 +19,13 @@ public class Game {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "seed", unique = true)
+    @Column(name = "seed")
     private Long seed;
 
     @Column(name = "score")
     private Long score;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
+    private User user;
 }
