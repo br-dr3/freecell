@@ -124,9 +124,20 @@ public class GamesService {
 
         var game = potentialGame.get();
 
+        var foundations = foundationsRepository.findByGameId(gameId);
+        var cells = cellsRepository.findByGameId(gameId);
+        var matrices = matricesRepository.findByGameId(gameId);
+
         return GameDTO.builder()
                 .id(game.getId())
                 .seed(game.getSeed())
+                .cardsDistributionDTO(
+                        CardsDistributionDTO.builder()
+                                .foundation(gamesMapper.toFoundationDTO(foundations))
+                                .cells(gamesMapper.toCellsDTO(cells))
+                                .matrix(gamesMapper.toMatrixDTO(matrices))
+                                .build()
+                )
                 .userId(game.getUser().getId())
                 .score(game.getScore())
                 .build();

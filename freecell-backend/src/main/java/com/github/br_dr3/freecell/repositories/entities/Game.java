@@ -1,10 +1,7 @@
 package com.github.br_dr3.freecell.repositories.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 
 import java.util.List;
 
@@ -14,6 +11,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @EqualsAndHashCode
+@NoArgsConstructor
 public class Game {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)

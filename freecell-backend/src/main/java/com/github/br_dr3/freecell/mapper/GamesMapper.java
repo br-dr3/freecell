@@ -52,9 +52,8 @@ public class GamesMapper {
         var biggestSuit = foundations.stream()
                 .filter(f -> f.getCardSuit().equals(cs))
                 .map(Foundation::getLastCard)
-                .map(Optional::ofNullable)
+                .filter(Objects::nonNull)
                 .findFirst()
-                .flatMap(Function.identity())
                 .orElse(null);
 
         if(Objects.isNull(biggestSuit)) {
