@@ -1,4 +1,4 @@
-package com.github.br_dr3.freecell.service;
+package com.github.br_dr3.freecell.mapper;
 
 import com.github.br_dr3.freecell.gateway.dto.UserDTO;
 import com.github.br_dr3.freecell.repositories.entities.User;
