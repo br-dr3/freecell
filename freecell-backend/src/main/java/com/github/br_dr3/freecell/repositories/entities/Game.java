@@ -1,12 +1,9 @@
 package com.github.br_dr3.freecell.repositories.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 
-import java.util.UUID;
+import java.util.List;
 
 @Entity
 @Table(name = "games")
@@ -14,14 +11,19 @@ import java.util.UUID;
 @Builder
 @AllArgsConstructor
 @EqualsAndHashCode
+@NoArgsConstructor
 public class Game {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "seed", unique = true)
+    @Column(name = "seed")
     private Long seed;
 
     @Column(name = "score")
     private Long score;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
+    private User user;
 }

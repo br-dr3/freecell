@@ -4,30 +4,31 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.util.Arrays;
+import java.util.List;
 
 @AllArgsConstructor
 @Getter
 public enum CardLabel {
-    ACE("A"),
-    TWO("2"), 
-    THREE("3"), 
-    FOUR("4"), 
-    FIVE("5"), 
-    SIX("6"), 
-    SEVEN("7"), 
-    EIGHT("8"), 
-    NINE("9"), 
-    TEN("10"), 
-    JACK("J"), 
-    QUEEN("Q"), 
-    KING("K");
+    ACE("A", 1),
+    TWO("2", 2),
+    THREE("3", 3),
+    FOUR("4", 4),
+    FIVE("5", 5),
+    SIX("6", 6),
+    SEVEN("7", 7),
+    EIGHT("8", 8),
+    NINE("9", 9),
+    TEN("10", 10),
+    JACK("J", 11),
+    QUEEN("Q", 12),
+    KING("K", 13);
 
     private String label;
+    private Integer order;
 
-    public static CardLabel fromLabel(String candidate) throws Exception {
+    public static List<CardLabel> allLessThan(CardLabel upperLimit) {
         return Arrays.stream(CardLabel.values())
-                .filter(cl -> cl.getLabel().equals(candidate))
-                .findAny()
-                .orElseThrow(() -> new Exception("Card Label not Found"));
+                .filter(cl -> cl.getOrder() < upperLimit.getOrder())
+                .toList();
     }
 }

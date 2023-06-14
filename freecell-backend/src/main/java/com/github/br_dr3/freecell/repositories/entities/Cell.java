@@ -1,20 +1,18 @@
 package com.github.br_dr3.freecell.repositories.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 
 @Entity
-@Table(name = "initial_games")
 @Data
+@Table(name = "cells")
 @Builder
+@NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
-public class InitialGame {
+public class Cell {
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(cascade = CascadeType.ALL)
@@ -22,12 +20,6 @@ public class InitialGame {
     private Card card;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "game_id", referencedColumnName = "id")
+    @JoinColumn(name = "game_id", referencedColumnName = "id", nullable = false)
     private Game game;
-
-    @Column(name = "x")
-    private Long x;
-
-    @Column(name = "y")
-    private Long y;
 }

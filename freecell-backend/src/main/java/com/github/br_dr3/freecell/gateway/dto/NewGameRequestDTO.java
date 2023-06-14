@@ -13,4 +13,7 @@ public class NewGameRequestDTO {
     @Min(1)
     @Max(30000)
     private Long seed;
+
+    @JsonProperty("user_id")
+    private Long userId;
 }

@@ -7,17 +7,17 @@ import lombok.Data;
 @Data
 @Builder
 public class GameDTO {
-    @JsonProperty("matrix")
-    private MatrixDTO matrix;
-
-    @JsonProperty("foundation")
-    private FoundationDTO foundation;
-
-    @JsonProperty("cells")
-    private CellsDTO cells;
-
     @JsonProperty("id")
+    private Long id;
+
+    @JsonProperty("cardsDistribution")
+    private CardsDistributionDTO cardsDistributionDTO;
+
+    @JsonProperty("seed")
     private Long seed;
+
+    @JsonProperty("user_id")
+    private Long userId;
 
     @JsonProperty("moves")
     private Long moves;
