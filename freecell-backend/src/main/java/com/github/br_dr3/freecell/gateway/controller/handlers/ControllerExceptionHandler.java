@@ -1,5 +1,6 @@
 package com.github.br_dr3.freecell.gateway.controller.handlers;
 
+import com.github.br_dr3.freecell.exceptions.GameNotFoundException;
 import com.github.br_dr3.freecell.exceptions.UserNotFoundException;
 import com.github.br_dr3.freecell.gateway.controller.handlers.dto.ErrorDTO;
 import com.github.br_dr3.freecell.service.UserNotCreatedException;
@@ -22,13 +23,24 @@ public class ControllerExceptionHandler {
                 HttpStatus.UNPROCESSABLE_ENTITY
         );
     }
-    @ExceptionHandler(value = {UserNotFoundException.class})
+    @ExceptionHandler(value = UserNotFoundException.class)
     private ResponseEntity<ErrorDTO> handleUserNotFound(UserNotFoundException ex) {
         return new ResponseEntity<>(
                 ErrorDTO.builder()
                         .message(ex.getMessage())
                         .error("USER_NOT_FOUND")
                         .detail("Ensure key to user is correct.")
+                        .build(),
+                HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(value = GameNotFoundException.class)
+    private ResponseEntity<ErrorDTO> handleGameNotFound(GameNotFoundException ex) {
+        return new ResponseEntity<>(
+                ErrorDTO.builder()
+                        .message(ex.getMessage())
+                        .error("GAME_NOT_FOUND")
+                        .detail("Ensure key to game is correct.")
                         .build(),
                 HttpStatus.NOT_FOUND);
     }

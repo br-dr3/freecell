@@ -10,14 +10,8 @@ public class GameDTO {
     @JsonProperty("id")
     private Long id;
 
-    @JsonProperty("matrix")
-    private MatrixDTO matrix;
-
-    @JsonProperty("foundation")
-    private FoundationDTO foundation;
-
-    @JsonProperty("cells")
-    private CellsDTO cells;
+    @JsonProperty("cardsDistribution")
+    private CardsDistributionDTO cardsDistributionDTO;
 
     @JsonProperty("seed")
     private Long seed;
