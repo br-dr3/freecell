@@ -1,8 +1,10 @@
 package com.github.br_dr3.freecell.service;
 
+import com.github.br_dr3.freecell.exceptions.UserNotCreatedException;
 import com.github.br_dr3.freecell.exceptions.UserNotFoundException;
 import com.github.br_dr3.freecell.gateway.dto.RequestUserCreationDTO;
 import com.github.br_dr3.freecell.gateway.dto.UserDTO;
+import com.github.br_dr3.freecell.mapper.UsersMapper;
 import com.github.br_dr3.freecell.repositories.UserRepository;
 import com.github.br_dr3.freecell.repositories.entities.User;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -12,6 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @EqualsAndHashCode
 @NoArgsConstructor
+@ToString
 public class Game {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -26,4 +27,13 @@ public class Game {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     private User user;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "game")
+    private List<Foundation> foundations;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "game")
+    private List<Cell> cells;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "game", orphanRemoval = true)
+    private List<Matrix> matrices;
 }

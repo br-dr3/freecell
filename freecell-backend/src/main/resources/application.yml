@@ -20,3 +20,4 @@ spring:
 freecell:
   number-of-cards: 52
   number-of-columns: 8
+  number-of-cells: 4

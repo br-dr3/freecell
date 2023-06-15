@@ -5,6 +5,7 @@ import com.github.br_dr3.freecell.distributor.Distributor;
 import com.github.br_dr3.freecell.gateway.dto.*;
 import com.github.br_dr3.freecell.repositories.entities.Cell;
 import com.github.br_dr3.freecell.repositories.entities.Foundation;
+import com.github.br_dr3.freecell.repositories.entities.Game;
 import com.github.br_dr3.freecell.repositories.entities.Matrix;
 import com.github.br_dr3.freecell.repositories.entities.enumeration.CardLabel;
 import com.github.br_dr3.freecell.repositories.entities.enumeration.CardSuit;
@@ -82,6 +83,23 @@ public class GamesMapper {
 
         return MatrixDTO.builder()
                 .columns(columns)
+                .build();
+    }
+
+    public GameDTO toGameDTO(Game game) {
+        return GameDTO.builder()
+                .id(game.getId())
+                .seed(game.getSeed())
+                .cardsDistributionDTO(
+                        CardsDistributionDTO.builder()
+                                .foundation(toFoundationDTO(game.getFoundations()))
+                                .cells(toCellsDTO(game.getCells()))
+                                .matrix(toMatrixDTO(game.getMatrices()))
+                                .build()
+                )
+                .userId(game.getUser().getId())
+                .moves(0L)
+                .score(game.getScore())
                 .build();
     }
 }

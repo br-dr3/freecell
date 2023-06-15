@@ -3,7 +3,7 @@ package com.github.br_dr3.freecell.gateway.controller.handlers;
 import com.github.br_dr3.freecell.exceptions.GameNotFoundException;
 import com.github.br_dr3.freecell.exceptions.UserNotFoundException;
 import com.github.br_dr3.freecell.gateway.controller.handlers.dto.ErrorDTO;
-import com.github.br_dr3.freecell.service.UserNotCreatedException;
+import com.github.br_dr3.freecell.exceptions.UserNotCreatedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

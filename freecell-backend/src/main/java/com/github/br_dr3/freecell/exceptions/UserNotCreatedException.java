@@ -1,4 +1,4 @@
-package com.github.br_dr3.freecell.service;
+package com.github.br_dr3.freecell.exceptions;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
