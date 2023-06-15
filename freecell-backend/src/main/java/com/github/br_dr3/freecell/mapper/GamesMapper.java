@@ -1,8 +1,13 @@
 package com.github.br_dr3.freecell.mapper;
 
 import com.github.br_dr3.freecell.config.ApplicationConfiguration;
-import com.github.br_dr3.freecell.distributor.Distributor;
-import com.github.br_dr3.freecell.gateway.dto.*;
+import com.github.br_dr3.freecell.gateway.dto.CardDTO;
+import com.github.br_dr3.freecell.gateway.dto.CardsDTO;
+import com.github.br_dr3.freecell.gateway.dto.CardsDistributionDTO;
+import com.github.br_dr3.freecell.gateway.dto.CellsDTO;
+import com.github.br_dr3.freecell.gateway.dto.FoundationDTO;
+import com.github.br_dr3.freecell.gateway.dto.GameDTO;
+import com.github.br_dr3.freecell.gateway.dto.MatrixDTO;
 import com.github.br_dr3.freecell.repositories.entities.Cell;
 import com.github.br_dr3.freecell.repositories.entities.Foundation;
 import com.github.br_dr3.freecell.repositories.entities.Game;
@@ -12,8 +17,10 @@ import com.github.br_dr3.freecell.repositories.entities.enumeration.CardSuit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
-import java.util.function.Function;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
