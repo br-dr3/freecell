@@ -13,6 +13,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
+@ToString
 public class Foundation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

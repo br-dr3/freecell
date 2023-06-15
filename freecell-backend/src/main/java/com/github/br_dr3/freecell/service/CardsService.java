@@ -4,6 +4,8 @@ import com.github.br_dr3.freecell.gateway.dto.CardsDTO;
 import com.github.br_dr3.freecell.mapper.CardsMapper;
 import com.github.br_dr3.freecell.repositories.CardsRepository;
 import com.github.br_dr3.freecell.repositories.entities.Card;
+import com.github.br_dr3.freecell.repositories.entities.enumeration.CardLabel;
+import com.github.br_dr3.freecell.repositories.entities.enumeration.CardSuit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -19,5 +21,9 @@ public class CardsService {
 
     public Card getCard(Long id) {
         return cardsRepository.getReferenceById(id);
+    }
+
+    public Card getCard(CardLabel cl, CardSuit cs) {
+        return cardsRepository.getByCardLabelAndCardSuit(cl, cs);
     }
 }

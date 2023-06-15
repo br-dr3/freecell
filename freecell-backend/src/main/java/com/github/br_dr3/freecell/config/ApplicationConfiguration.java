@@ -12,4 +12,7 @@ public class ApplicationConfiguration {
 
     @Value("${freecell.number-of-columns}")
     private Integer numberOfColumns;
+
+    @Value("${freecell.number-of-cells}")
+    private Integer numberOfCells;
 }

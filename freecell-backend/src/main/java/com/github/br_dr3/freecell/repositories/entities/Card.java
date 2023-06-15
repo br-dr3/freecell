@@ -15,6 +15,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
+@ToString
 public class Card {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)

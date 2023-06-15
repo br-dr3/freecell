@@ -10,17 +10,18 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
+@ToString
 public class Matrix {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "game_id", referencedColumnName = "id")
+    @JoinColumn(name = "game_id", referencedColumnName = "id", nullable = false)
     private Game game;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "card_id", referencedColumnName = "id")
+    @JoinColumn(name = "card_id", referencedColumnName = "id", nullable = false)
     private Card card;
 
     @Column(name = "column_id", nullable = false)

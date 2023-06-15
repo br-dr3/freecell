@@ -10,6 +10,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
+@ToString
 public class Cell {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

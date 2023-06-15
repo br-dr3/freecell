@@ -1,6 +1,7 @@
 package com.github.br_dr3.freecell.gateway.controller;
 
 import com.github.br_dr3.freecell.gateway.dto.GameDTO;
+import com.github.br_dr3.freecell.gateway.dto.MoveCardsRequestDTO;
 import com.github.br_dr3.freecell.gateway.dto.NewGameRequestDTO;
 import com.github.br_dr3.freecell.service.GamesService;
 import com.github.br_dr3.freecell.util.DataWrapper;
@@ -25,6 +26,15 @@ public class GamesController {
     @GetMapping("/{gameId}")
     public ResponseEntity<DataWrapper<GameDTO>> getGame(@PathVariable("gameId") Long gameId) {
         var game = gamesService.getGame(gameId);
+
+        return ResponseEntity.ok().body(DataWrapper.<GameDTO>builder().data(game).build());
+    }
+
+    @PostMapping("/{gameId}/move")
+    public ResponseEntity<DataWrapper<GameDTO>> moveCard(
+            @PathVariable("gameId") Long gameId,
+            @RequestBody MoveCardsRequestDTO moveCardsRequest) {
+        var game = gamesService.moveCards(gameId, moveCardsRequest);
 
         return ResponseEntity.ok().body(DataWrapper.<GameDTO>builder().data(game).build());
     }
