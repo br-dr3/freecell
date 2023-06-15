@@ -4,7 +4,6 @@ import com.github.br_dr3.freecell.config.ApplicationConfiguration;
 import com.github.br_dr3.freecell.gateway.dto.CardDTO;
 import com.github.br_dr3.freecell.gateway.dto.CardsDTO;
 import com.github.br_dr3.freecell.gateway.dto.CardsDistributionDTO;
-import com.github.br_dr3.freecell.gateway.dto.CellsDTO;
 import com.github.br_dr3.freecell.gateway.dto.FoundationDTO;
 import com.github.br_dr3.freecell.gateway.dto.GameDTO;
 import com.github.br_dr3.freecell.gateway.dto.MatrixDTO;
@@ -61,6 +60,7 @@ public class GamesMapper {
                 .stream()
                 .map(cl -> CardDTO.builder()
                         .label(cl.getLabel())
+                        .symbol(cs.getSymbol())
                         .type(cs.name())
                         .color(cs.getColor().name())
                         .build())

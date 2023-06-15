@@ -6,10 +6,11 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public enum CardSuit {
-    CLUBS(Color.BLACK),
-    HEARTS(Color.RED),
-    SPADES(Color.BLACK),
-    DIAMONDS(Color.RED);
+    CLUBS(Color.BLACK, "♣"),
+    HEARTS(Color.RED, "♥"),
+    SPADES(Color.BLACK, "♠"),
+    DIAMONDS(Color.RED, "♦");
 
     private final Color color;
+    private final String symbol;
 }
