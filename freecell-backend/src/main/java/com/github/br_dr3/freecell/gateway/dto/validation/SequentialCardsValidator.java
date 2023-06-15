@@ -3,7 +3,6 @@ package com.github.br_dr3.freecell.gateway.dto.validation;
 import com.github.br_dr3.freecell.gateway.dto.CardDTO;
 import com.github.br_dr3.freecell.gateway.dto.CardsDTO;
 import com.github.br_dr3.freecell.gateway.dto.validation.ann.SequentialCardsConstraint;
-import com.github.br_dr3.freecell.repositories.entities.Card;
 import com.github.br_dr3.freecell.repositories.entities.enumeration.CardLabel;
 import com.github.br_dr3.freecell.repositories.entities.enumeration.Color;
 import jakarta.validation.ConstraintValidator;

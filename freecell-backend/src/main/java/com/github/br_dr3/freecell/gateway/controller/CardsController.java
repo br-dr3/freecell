@@ -2,7 +2,6 @@ package com.github.br_dr3.freecell.gateway.controller;
 
 import com.github.br_dr3.freecell.gateway.dto.CardsDTO;
 import com.github.br_dr3.freecell.service.CardsService;
-import com.github.br_dr3.freecell.service.GamesService;
 import com.github.br_dr3.freecell.util.DataWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
