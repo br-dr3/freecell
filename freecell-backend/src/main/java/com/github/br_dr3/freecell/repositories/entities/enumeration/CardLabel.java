@@ -26,9 +26,9 @@ public enum CardLabel {
     private String label;
     private Integer order;
 
-    public static List<CardLabel> allLessThan(CardLabel upperLimit) {
+    public static List<CardLabel> allLessEqualsThan(CardLabel upperLimit) {
         return Arrays.stream(CardLabel.values())
-                .filter(cl -> cl.getOrder() < upperLimit.getOrder())
+                .filter(cl -> cl.getOrder() <= upperLimit.getOrder())
                 .toList();
     }
 }

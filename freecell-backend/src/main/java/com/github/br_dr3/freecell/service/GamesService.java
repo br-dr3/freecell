@@ -11,7 +11,6 @@ import com.github.br_dr3.freecell.exceptions.FoundationNotFoundException;
 import com.github.br_dr3.freecell.exceptions.GameNotFoundException;
 import com.github.br_dr3.freecell.exceptions.TooManyCardsException;
 import com.github.br_dr3.freecell.exceptions.UserNotFoundException;
-import com.github.br_dr3.freecell.gateway.dto.CardDTO;
 import com.github.br_dr3.freecell.gateway.dto.CardsDTO;
 import com.github.br_dr3.freecell.gateway.dto.GameDTO;
 import com.github.br_dr3.freecell.gateway.dto.MoveCardsRequestDTO;
@@ -65,14 +64,20 @@ public class GamesService {
         return gamesMapper.toGameDTO(game);
     }
     public GameDTO moveCards(Long gameId, MoveCardsRequestDTO moveCardsRequest) {
-        var cardsToMove = moveCardsRequest.getCardsToMove();
+
+        var head = moveCardsRequest.getHead();
+        var suitHeadCard = CardSuit.valueOf(head.getType());
+        var labelHeadCard = CardLabel.valueOf(head.getLabel());
+        var headCardEntity = cardsRepository.getByCardLabelAndCardSuit(labelHeadCard, suitHeadCard);
+
+        var actualGame = getGameEntity(gameId);
+        var cardsToMove = getAllCardsHeadedBy(actualGame, headCardEntity);
 
         if(!isMovable(cardsToMove)) {
             throw new CardsNotMovableException("These cards are not movable");
         }
 
         Game updatedGame;
-        var actualGame = getGameEntity(gameId);
         if(moveCardsRequest.isToFoundation()) {
             updatedGame = moveToFoundation(actualGame, cardsToMove);
         } else if(moveCardsRequest.isToCell()) {
@@ -82,6 +87,25 @@ public class GamesService {
         }
 
         return gamesMapper.toGameDTO(updatedGame);
+    }
+
+    private List<Card> getAllCardsHeadedBy(Game game, Card headCard) {
+        if(isInFoundation(game, headCard) || isInCell(game, headCard)) {
+            return List.of(headCard);
+        }
+
+        var position = game.getMatrices()
+                .stream()
+                .filter(m -> m.getCard().equals(headCard))
+                .findFirst()
+                .orElseThrow(() -> new CardNotFoundException("Could not find card in the game"));
+
+        return game.getMatrices()
+                .stream()
+                .filter(m -> Objects.equals(m.getColumn(), position.getColumn()))
+                .filter(m -> m.getLine() >= position.getLine())
+                .map(Matrix::getCard)
+                .toList();
     }
 
 
@@ -159,8 +183,7 @@ public class GamesService {
     }
 
     private Game saveGame(Game game) {
-        var updatedGame = gamesRepository.save(game);
-        return updatedGame;
+        return gamesRepository.save(game);
     }
 
     private Game getGameEntity(Long gameId) {
@@ -173,34 +196,74 @@ public class GamesService {
         return potentialGame.get();
     }
 
-    private Game moveToColumn(Game actualGame, CardsDTO cardsToMove, Long column) {
-        return actualGame;
+    private Game moveToColumn(Game gameToUpdate, List<Card> cardsToMove, Long column) {
+        var headCard = cardsToMove.get(0);
+
+        var newHeadCardPosition = gameToUpdate.getMatrices()
+                .stream()
+                .filter(m -> m.getColumn().equals(column))
+                .map(m -> Map.entry(
+                        m.getCard(),
+                        List.of(Math.toIntExact(m.getColumn()), Math.toIntExact(m.getLine()))))
+                .reduce((m1, m2) -> m1.getValue().get(1) > m2.getValue().get(1)? m1 : m2)
+                .orElse(Map.entry(
+                        Card.builder().build(),
+                        List.of(Math.toIntExact(column), -1)));
+
+        if(Objects.nonNull(newHeadCardPosition.getKey().getCardLabel())
+                && (!Objects.equals(newHeadCardPosition.getKey().getCardLabel().getOrder(),
+                headCard.getCardLabel().getOrder()+1)
+                || Objects.equals(newHeadCardPosition.getKey().getCardSuit().getColor(),
+                headCard.getCardSuit().getColor()))) {
+            throw new CardsNotMovableException("The card '" + headCard + "' cannot be headed by '"
+                    + newHeadCardPosition.getKey() + "'");
+        }
+
+        var newFirstLinePosition = newHeadCardPosition.getValue().get(1) + 1;
+        var newLastLinePosition = newFirstLinePosition + cardsToMove.size();
+
+        var newMatrices = IntStream.range(newFirstLinePosition, newLastLinePosition)
+                .mapToObj(i -> Matrix.builder()
+                        .game(gameToUpdate)
+                        .card(cardsToMove.get(i - newFirstLinePosition))
+                        .column(column)
+                        .line((long) i)
+                        .build())
+                .toList();
+
+        if(isInCell(gameToUpdate, headCard)) {
+            gameToUpdate.getCells()
+                    .stream()
+                    .filter(c -> headCard.equals(c.getCard()))
+                    .map(c -> Map.entry(gameToUpdate.getCells().indexOf(c), c))
+                    .forEach(e -> gameToUpdate.getCells()
+                            .set(e.getKey(), Cell.builder()
+                                    .id(e.getValue().getId())
+                                    .card(null)
+                                    .game(e.getValue().getGame())
+                                    .build()));
+        } else {
+            gameToUpdate.getMatrices()
+                    .removeIf(m -> cardsToMove.contains(m.getCard()));
+        }
+
+        gameToUpdate.getMatrices().addAll(newMatrices);
+
+        return saveGame(gameToUpdate);
     }
 
-    private Game moveToCell(Game gameToUpdate, CardsDTO cardsToMove) {
+    private Game moveToCell(Game gameToUpdate, List<Card> cardsToMove) {
         var cardToMove = getCardToMove(cardsToMove);
-        var labelCardToMove = CardLabel.valueOf(cardToMove.getLabel());
-        var suitCardToMove = CardSuit.valueOf(cardToMove.getType());
+        var labelCardToMove = cardToMove.getCardLabel();
+        var suitCardToMove = cardToMove.getCardSuit();
 
         var cardToMoveEntity = cardsRepository.getByCardLabelAndCardSuit(labelCardToMove, suitCardToMove);
 
-        var alreadyInCell = gameToUpdate.getCells()
-                .stream()
-                .anyMatch(c -> Objects.nonNull(c.getCard())
-                        && c.getCard().equals(cardToMoveEntity));
-
-        if(alreadyInCell) {
+        if(isInCell(gameToUpdate, cardToMoveEntity)) {
             throw new AlredyInCellException("Card '"+cardToMove+"' already in cell");
         }
 
-        var isInFoundation = gameToUpdate.getFoundations()
-                .stream()
-                .filter(f -> f.getCardSuit().equals(suitCardToMove)
-                        && Objects.nonNull(f.getLastCard()))
-                .map(f -> f.getLastCard().getCardLabel())
-                .anyMatch(cl -> cl.getOrder() >= labelCardToMove.getOrder());
-
-        if(isInFoundation) {
+        if(isInFoundation(gameToUpdate, cardToMoveEntity)) {
             throw new CardInFoundationException("Card '" + cardToMove + "' in Foundation, cannot be moved to cell");
         }
 
@@ -226,18 +289,34 @@ public class GamesService {
         return saveGame(gameToUpdate);
     }
 
-    private static CardDTO getCardToMove(CardsDTO cardsToMove) {
-        if(cardsToMove.getCards().size() != 1) {
+    private static boolean isInFoundation(Game game, Card card) {
+        return game.getFoundations()
+                .stream()
+                .filter(f -> f.getCardSuit().equals(card.getCardSuit())
+                        && Objects.nonNull(f.getLastCard()))
+                .map(f -> f.getLastCard().getCardLabel())
+                .anyMatch(cl -> cl.getOrder() >= card.getCardLabel().getOrder());
+    }
+
+    private static boolean isInCell(Game game, Card card) {
+        return game.getCells()
+                .stream()
+                .filter(c -> Objects.nonNull(c.getCard()))
+                .anyMatch(c -> c.getCard().equals(card));
+    }
+
+    private static Card getCardToMove(List<Card> cardsToMove) {
+        if(cardsToMove.size() != 1) {
             throw new TooManyCardsException("You can only send one card per time to Foundation or Cell");
         }
 
-        return cardsToMove.getCards().get(0);
+        return cardsToMove.get(0);
     }
 
-    private Game moveToFoundation(Game gameToUpdate, CardsDTO cardsToMove) {
+    private Game moveToFoundation(Game gameToUpdate, List<Card> cardsToMove) {
         var cardToMove = getCardToMove(cardsToMove);
-        var labelCardToMove = CardLabel.valueOf(cardToMove.getLabel());
-        var suitCardToMove = CardSuit.valueOf(cardToMove.getType());
+        var labelCardToMove = cardToMove.getCardLabel();
+        var suitCardToMove = cardToMove.getCardSuit();
 
         var foundation = gameToUpdate.getFoundations()
                 .stream()
@@ -281,7 +360,7 @@ public class GamesService {
         return saveGame(gameToUpdate);
     }
 
-    private boolean isMovable(CardsDTO cardsToMove) {
+    private boolean isMovable(List<Card> cardsToMove) {
         return true;
     }
 }

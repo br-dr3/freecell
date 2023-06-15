@@ -4,7 +4,6 @@ import com.github.br_dr3.freecell.config.ApplicationConfiguration;
 import com.github.br_dr3.freecell.gateway.dto.CardDTO;
 import com.github.br_dr3.freecell.gateway.dto.CardsDTO;
 import com.github.br_dr3.freecell.gateway.dto.CardsDistributionDTO;
-import com.github.br_dr3.freecell.gateway.dto.CellsDTO;
 import com.github.br_dr3.freecell.gateway.dto.FoundationDTO;
 import com.github.br_dr3.freecell.gateway.dto.GameDTO;
 import com.github.br_dr3.freecell.gateway.dto.MatrixDTO;
@@ -29,17 +28,6 @@ import java.util.stream.Stream;
 public class GamesMapper {
     @Autowired CardsMapper cardsMapper;
     @Autowired ApplicationConfiguration applicationConfiguration;
-
-    public CellsDTO toCellsDTO(List<Cell> cells) {
-        var cards = cells.stream()
-                .map(Cell::getCard)
-                .filter(Objects::nonNull)
-                .toList();
-
-        return CellsDTO.builder()
-                .cards(cardsMapper.toCardsDTO(cards))
-                .build();
-    }
 
     public FoundationDTO toFoundationDTO(List<Foundation> foundations) {
         var cardsSuits = Arrays.stream(CardSuit.values())
@@ -68,10 +56,11 @@ public class GamesMapper {
             return List.of();
         }
 
-        return CardLabel.allLessThan(biggestSuit.getCardLabel())
+        return CardLabel.allLessEqualsThan(biggestSuit.getCardLabel())
                 .stream()
                 .map(cl -> CardDTO.builder()
                         .label(cl.getLabel())
+                        .symbol(cs.getSymbol())
                         .type(cs.name())
                         .color(cs.getColor().name())
                         .build())
@@ -100,13 +89,25 @@ public class GamesMapper {
                 .cardsDistributionDTO(
                         CardsDistributionDTO.builder()
                                 .foundation(toFoundationDTO(game.getFoundations()))
-                                .cells(toCellsDTO(game.getCells()))
+                                .cells(toCardsDTO(game.getCells()))
                                 .matrix(toMatrixDTO(game.getMatrices()))
                                 .build()
                 )
                 .userId(game.getUser().getId())
                 .moves(0L)
                 .score(game.getScore())
+                .build();
+    }
+
+    private CardsDTO toCardsDTO(List<Cell> cells) {
+        var cards = cells.stream()
+                .map(Cell::getCard)
+                .filter(Objects::nonNull)
+                .map(c -> cardsMapper.toCardDTO(c))
+                .toList();
+
+        return CardsDTO.builder()
+                .cards(cards)
                 .build();
     }
 }

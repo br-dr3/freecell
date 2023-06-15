@@ -18,5 +18,10 @@ public class CardDTO {
     private String type;
 
     @JsonProperty("color")
+    @JsonIgnore
     private String color;
+
+    @JsonProperty("symbol")
+    @JsonIgnore
+    private String symbol;
 }

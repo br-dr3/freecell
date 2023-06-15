@@ -3,7 +3,6 @@ package com.github.br_dr3.freecell.gateway.dto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.github.br_dr3.freecell.gateway.dto.validation.ann.PositionConstraint;
-import com.github.br_dr3.freecell.gateway.dto.validation.ann.SequentialCardsConstraint;
 import lombok.Builder;
 import lombok.Data;
 
@@ -12,9 +11,8 @@ import lombok.Data;
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @PositionConstraint
 public class MoveCardsRequestDTO {
-    @JsonProperty("cardsToMove")
-    @SequentialCardsConstraint
-    private CardsDTO cardsToMove;
+    @JsonProperty("head")
+    private CardDTO head;
 
     @JsonProperty("foundation")
     private boolean toFoundation;

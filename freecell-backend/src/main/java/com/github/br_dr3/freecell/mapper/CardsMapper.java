@@ -24,6 +24,7 @@ public class CardsMapper {
                 .label(card.getCardLabel().getLabel())
                 .type(card.getCardSuit().name())
                 .color(card.getCardSuit().getColor().name())
+                .symbol(card.getCardSuit().getSymbol())
                 .build();
     }
 }
