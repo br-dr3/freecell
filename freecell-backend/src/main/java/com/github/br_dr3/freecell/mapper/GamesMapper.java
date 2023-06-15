@@ -30,17 +30,6 @@ public class GamesMapper {
     @Autowired CardsMapper cardsMapper;
     @Autowired ApplicationConfiguration applicationConfiguration;
 
-    public CellsDTO toCellsDTO(List<Cell> cells) {
-        var cards = cells.stream()
-                .map(Cell::getCard)
-                .filter(Objects::nonNull)
-                .toList();
-
-        return CellsDTO.builder()
-                .cards(cardsMapper.toCardsDTO(cards))
-                .build();
-    }
-
     public FoundationDTO toFoundationDTO(List<Foundation> foundations) {
         var cardsSuits = Arrays.stream(CardSuit.values())
                 .map(cs -> Map.entry(cs, CardsDTO.builder()
@@ -68,7 +57,7 @@ public class GamesMapper {
             return List.of();
         }
 
-        return CardLabel.allLessThan(biggestSuit.getCardLabel())
+        return CardLabel.allLessEqualsThan(biggestSuit.getCardLabel())
                 .stream()
                 .map(cl -> CardDTO.builder()
                         .label(cl.getLabel())
@@ -100,13 +89,25 @@ public class GamesMapper {
                 .cardsDistributionDTO(
                         CardsDistributionDTO.builder()
                                 .foundation(toFoundationDTO(game.getFoundations()))
-                                .cells(toCellsDTO(game.getCells()))
+                                .cells(toCardsDTO(game.getCells()))
                                 .matrix(toMatrixDTO(game.getMatrices()))
                                 .build()
                 )
                 .userId(game.getUser().getId())
                 .moves(0L)
                 .score(game.getScore())
+                .build();
+    }
+
+    private CardsDTO toCardsDTO(List<Cell> cells) {
+        var cards = cells.stream()
+                .map(Cell::getCard)
+                .filter(Objects::nonNull)
+                .map(c -> cardsMapper.toCardDTO(c))
+                .toList();
+
+        return CardsDTO.builder()
+                .cards(cards)
                 .build();
     }
 }

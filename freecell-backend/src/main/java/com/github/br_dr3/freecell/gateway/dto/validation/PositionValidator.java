@@ -12,12 +12,8 @@ public class PositionValidator implements ConstraintValidator<PositionConstraint
 
     @Override
     public boolean isValid(MoveCardsRequestDTO moveCardsRequestDTO, ConstraintValidatorContext constraintValidatorContext) {
-        var isOnlyOneCard = moveCardsRequestDTO.getCardsToMove()
-                .getCards()
-                .size() == 1;
-
-        var isFoundation = moveCardsRequestDTO.isToFoundation() && isOnlyOneCard;
-        var isCell = moveCardsRequestDTO.isToCell() && isOnlyOneCard;
+        var isFoundation = moveCardsRequestDTO.isToFoundation();
+        var isCell = moveCardsRequestDTO.isToCell();
 
         var column = moveCardsRequestDTO.getColumn();
         var isColumn = column != null

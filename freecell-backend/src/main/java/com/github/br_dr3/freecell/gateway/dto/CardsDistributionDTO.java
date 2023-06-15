@@ -14,5 +14,5 @@ public class CardsDistributionDTO {
     private FoundationDTO foundation;
 
     @JsonProperty("cells")
-    private CellsDTO cells;
+    private CardsDTO cells;
 }
