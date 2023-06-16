@@ -52,6 +52,10 @@ public class GamesController {
     @GetMapping("/{gameId}/vision")
     public ResponseEntity<String> getGameVision(@PathVariable("gameId") Long gameId) {
         var game = gamesService.getGame(gameId);
+        return ResponseEntity.ok(getVision(game));
+    }
+
+    private static String getVision(GameDTO game) {
         var cardsDistribution = game.getCardsDistributionDTO();
         var foundation = cardsDistribution.getFoundation();
         var cells = cardsDistribution.getCells();
@@ -100,10 +104,8 @@ public class GamesController {
                 .reduce((ns, acc) -> ns + "   " + acc)
                 .orElse("");
 
-        var response = foundationResponse + "          " + cellResponse
-        + "\n\n" + matrixResponse;
-
-        return ResponseEntity.ok(response);
+        return foundationResponse + "          " + cellResponse
+                + "\n\n" + matrixResponse;
     }
 
     @PostMapping("/{gameId}/move")
@@ -113,5 +115,14 @@ public class GamesController {
         var game = gamesService.moveCards(gameId, moveCardsRequest);
 
         return ResponseEntity.ok().body(DataWrapper.<GameDTO>builder().data(game).build());
+    }
+
+    @PostMapping("/{gameId}/move/vision")
+    public ResponseEntity<String> moveCardVision(
+            @PathVariable("gameId") Long gameId,
+            @RequestBody MoveCardsRequestDTO moveCardsRequest) {
+        var game = gamesService.moveCards(gameId, moveCardsRequest);
+
+        return ResponseEntity.ok(getVision(game));
     }
 }

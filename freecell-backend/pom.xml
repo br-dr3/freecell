@@ -12,6 +12,7 @@
 	<artifactId>freecell</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>freecell</name>
+	<packaging>jar</packaging>
 	<properties>
 		<java.version>17</java.version>
 	</properties>
@@ -52,6 +53,7 @@
 	</dependencies>
 
 	<build>
+		<finalName>freecell-backend</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
