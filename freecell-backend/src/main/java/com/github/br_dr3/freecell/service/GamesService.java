@@ -17,7 +17,9 @@ import com.github.br_dr3.freecell.gateway.dto.MoveCardsRequestDTO;
 import com.github.br_dr3.freecell.gateway.dto.NewGameRequestDTO;
 import com.github.br_dr3.freecell.mapper.GamesMapper;
 import com.github.br_dr3.freecell.repositories.CardsRepository;
+import com.github.br_dr3.freecell.repositories.CellsRepository;
 import com.github.br_dr3.freecell.repositories.GamesRepository;
+import com.github.br_dr3.freecell.repositories.MatricesRepository;
 import com.github.br_dr3.freecell.repositories.UserRepository;
 import com.github.br_dr3.freecell.repositories.entities.Card;
 import com.github.br_dr3.freecell.repositories.entities.Cell;
@@ -44,6 +46,8 @@ public class GamesService {
     @Autowired GamesRepository gamesRepository;
     @Autowired UserRepository userRepository;
     @Autowired CardsRepository cardsRepository;
+    @Autowired MatricesRepository matricesRepository;
+    @Autowired CellsRepository cellsRepository;
     @Autowired GamesMapper gamesMapper;
     @Autowired CardsService cardsService;
     @Autowired ApplicationConfiguration applicationConfiguration;
@@ -73,9 +77,7 @@ public class GamesService {
         var actualGame = getGameEntity(gameId);
         var cardsToMove = getAllCardsHeadedBy(actualGame, headCardEntity);
 
-        if(!isMovable(cardsToMove)) {
-            throw new CardsNotMovableException("These cards are not movable");
-        }
+        validMove(actualGame, cardsToMove);
 
         Game updatedGame;
         if(moveCardsRequest.isToFoundation()) {
@@ -360,7 +362,25 @@ public class GamesService {
         return saveGame(gameToUpdate);
     }
 
-    private boolean isMovable(List<Card> cardsToMove) {
-        return true;
+    private void validMove(Game actualGame, List<Card> cardsToMove) {
+        var isInFoundation = cardsToMove.stream()
+                .anyMatch(c -> isInFoundation(actualGame, c));
+
+        if(isInFoundation) {
+            throw new CardsNotMovableException("Cards '" + cardsToMove + "' are not movable");
+        }
+
+        var gameId = actualGame.getId();
+        var usedColumns = matricesRepository.countUsedColumns(gameId);
+        var emptyCells = cellsRepository.countEmpty(gameId);
+
+        var maxCards =
+                Math.pow(2, applicationConfiguration.getNumberOfColumns() - usedColumns)
+                        * (emptyCells + 1);
+
+        if(cardsToMove.size() > maxCards) {
+            throw new TooManyCardsException("Maximum size of cards to move should be "
+                    + maxCards + " in this scenario");
+        }
     }
 }

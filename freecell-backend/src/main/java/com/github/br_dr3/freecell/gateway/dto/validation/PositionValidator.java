@@ -11,6 +11,9 @@ public class PositionValidator implements ConstraintValidator<PositionConstraint
     @Autowired ApplicationConfiguration applicationConfiguration;
 
     @Override
+    public void initialize(PositionConstraint constraint) {}
+
+    @Override
     public boolean isValid(MoveCardsRequestDTO moveCardsRequestDTO, ConstraintValidatorContext constraintValidatorContext) {
         var isFoundation = moveCardsRequestDTO.isToFoundation();
         var isCell = moveCardsRequestDTO.isToCell();
@@ -20,6 +23,7 @@ public class PositionValidator implements ConstraintValidator<PositionConstraint
                 && column >= 0
                 && column < applicationConfiguration.getNumberOfColumns();
 
-        return isFoundation ^ isCell ^ isColumn;
+        return isFoundation ^ isColumn ^ isCell
+                && !(isFoundation && isColumn && isCell);
     }
 }
