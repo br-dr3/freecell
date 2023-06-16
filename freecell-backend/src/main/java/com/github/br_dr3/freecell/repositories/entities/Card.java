@@ -38,4 +38,9 @@ public class Card {
     @Column(name = "suit", nullable = false)
     @Enumerated(EnumType.STRING)
     private CardSuit cardSuit;
+
+    @Override
+    public String toString() {
+        return cardLabel.getLabel() + cardSuit.getSymbol();
+    }
 }

@@ -15,7 +15,7 @@ import java.lang.annotation.Target;
 @Target( { ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
 public @interface PositionConstraint {
-    String message() default "Invalid position to card";
+    String message() default "Invalid position chosen to card";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }

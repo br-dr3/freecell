@@ -1,0 +1,23 @@
+springdoc:
+  swagger-ui:
+    path: /
+
+spring:
+  sql:
+    init:
+      mode: always
+  datasource:
+    url: 'jdbc:mysql://db:3306/freecell'
+    username: user
+    password: password
+    driverClassName: com.mysql.cj.jdbc.Driver
+  jpa:
+    defer-datasource-initialization: true
+    show-sql: true
+    hibernate:
+      #      ddl-auto: create-drop
+      ddl-auto: update
+freecell:
+  number-of-cards: 52
+  number-of-columns: 8
+  number-of-cells: 4

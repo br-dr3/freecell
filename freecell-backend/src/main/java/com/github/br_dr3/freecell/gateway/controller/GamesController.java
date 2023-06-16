@@ -4,13 +4,13 @@ import com.github.br_dr3.freecell.gateway.dto.CardDTO;
 import com.github.br_dr3.freecell.gateway.dto.GameDTO;
 import com.github.br_dr3.freecell.gateway.dto.MoveCardsRequestDTO;
 import com.github.br_dr3.freecell.gateway.dto.NewGameRequestDTO;
-import com.github.br_dr3.freecell.repositories.entities.Matrix;
-import com.github.br_dr3.freecell.repositories.entities.enumeration.CardSuit;
 import com.github.br_dr3.freecell.service.GamesService;
 import com.github.br_dr3.freecell.util.DataWrapper;
+import jakarta.validation.Valid;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,17 +19,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 @RestController
 @RequestMapping("/games")
+@Validated
 public class GamesController {
 
     @Autowired
@@ -52,6 +51,10 @@ public class GamesController {
     @GetMapping("/{gameId}/vision")
     public ResponseEntity<String> getGameVision(@PathVariable("gameId") Long gameId) {
         var game = gamesService.getGame(gameId);
+        return ResponseEntity.ok(getVision(game));
+    }
+
+    private static String getVision(GameDTO game) {
         var cardsDistribution = game.getCardsDistributionDTO();
         var foundation = cardsDistribution.getFoundation();
         var cells = cardsDistribution.getCells();
@@ -100,18 +103,25 @@ public class GamesController {
                 .reduce((ns, acc) -> ns + "   " + acc)
                 .orElse("");
 
-        var response = foundationResponse + "          " + cellResponse
-        + "\n\n" + matrixResponse;
-
-        return ResponseEntity.ok(response);
+        return foundationResponse + "          " + cellResponse
+                + "\n\n" + matrixResponse;
     }
 
     @PostMapping("/{gameId}/move")
     public ResponseEntity<DataWrapper<GameDTO>> moveCard(
             @PathVariable("gameId") Long gameId,
-            @RequestBody MoveCardsRequestDTO moveCardsRequest) {
+            @Valid @RequestBody MoveCardsRequestDTO moveCardsRequest) {
         var game = gamesService.moveCards(gameId, moveCardsRequest);
 
         return ResponseEntity.ok().body(DataWrapper.<GameDTO>builder().data(game).build());
+    }
+
+    @PostMapping("/{gameId}/move/vision")
+    public ResponseEntity<String> moveCardVision(
+            @PathVariable("gameId") Long gameId,
+            @Valid @RequestBody MoveCardsRequestDTO moveCardsRequest) {
+        var game = gamesService.moveCards(gameId, moveCardsRequest);
+
+        return ResponseEntity.ok(getVision(game));
     }
 }
