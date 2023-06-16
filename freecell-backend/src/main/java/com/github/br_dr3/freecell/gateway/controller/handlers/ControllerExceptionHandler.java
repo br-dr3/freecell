@@ -1,6 +1,11 @@
 package com.github.br_dr3.freecell.gateway.controller.handlers;
 
-import com.github.br_dr3.freecell.exceptions.*;
+import com.github.br_dr3.freecell.exceptions.AlredyInCellException;
+import com.github.br_dr3.freecell.exceptions.CardsNotMovableException;
+import com.github.br_dr3.freecell.exceptions.GameNotFoundException;
+import com.github.br_dr3.freecell.exceptions.TooManyCardsException;
+import com.github.br_dr3.freecell.exceptions.UserNotCreatedException;
+import com.github.br_dr3.freecell.exceptions.UserNotFoundException;
 import com.github.br_dr3.freecell.gateway.controller.handlers.dto.ErrorDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
