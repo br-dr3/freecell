@@ -72,9 +72,6 @@ function Place(props) {
             
             let isOrdered = parseInt(cardsInColumn[i+1].order) + 1 === parseInt(c.order);
 
-            console.log(`cardsInColumn[i+1].order + 1 === c.order => ${(cardsInColumn[i+1].order + 1)} + 1 === ${c.order}`)
-
-
             return isSameColumn && isLineBigger && isOrdered;
         }).concat(cardsInColumn.slice(-1));
 
@@ -109,8 +106,7 @@ function Place(props) {
     }    
 
     const placeStyle = lineId > 0 ? {marginTop: "-50px"} : {}
-    
- 
+
     return (
             <div className="place" key={`place-${card.id}`} style={{...placeStyle}}>
                 <button column={columnId} line={lineId} 
