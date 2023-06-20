@@ -22,9 +22,10 @@ public class CardsMapper {
         return CardDTO.builder()
                 .id(card.getId())
                 .label(card.getCardLabel().getLabel())
-                .type(card.getCardSuit().name())
+                .suit(card.getCardSuit().name())
                 .color(card.getCardSuit().getColor().name())
                 .symbol(card.getCardSuit().getSymbol())
+                .order(card.getCardLabel().getOrder())
                 .build();
     }
 }

@@ -61,8 +61,9 @@ public class GamesMapper {
                 .map(cl -> CardDTO.builder()
                         .label(cl.getLabel())
                         .symbol(cs.getSymbol())
-                        .type(cs.name())
+                        .suit(cs.name())
                         .color(cs.getColor().name())
+                        .order(cl.getOrder())
                         .build())
                 .toList();
     }

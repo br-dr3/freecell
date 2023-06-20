@@ -8,20 +8,21 @@ import lombok.Data;
 @Data
 @Builder
 public class CardDTO {
-    @JsonIgnore
+    @JsonProperty("id")
     private Long id;
 
     @JsonProperty("label")
     private String label;
 
-    @JsonProperty("type")
-    private String type;
+    @JsonProperty("suit")
+    private String suit;
 
     @JsonProperty("color")
-    @JsonIgnore
     private String color;
 
     @JsonProperty("symbol")
-    @JsonIgnore
     private String symbol;
+
+    @JsonProperty("order")
+    private Integer order;
 }
