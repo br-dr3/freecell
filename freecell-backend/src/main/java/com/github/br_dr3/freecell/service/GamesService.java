@@ -70,7 +70,7 @@ public class GamesService {
     public GameDTO moveCards(Long gameId, MoveCardsRequestDTO moveCardsRequest) {
 
         var head = moveCardsRequest.getHead();
-        var suitHeadCard = CardSuit.valueOf(head.getType());
+        var suitHeadCard = CardSuit.valueOf(head.getSuit());
         var labelHeadCard = CardLabel.valueOf(head.getLabel());
         var headCardEntity = cardsRepository.getByCardLabelAndCardSuit(labelHeadCard, suitHeadCard);
 
